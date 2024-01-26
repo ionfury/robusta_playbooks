@@ -19,7 +19,7 @@ def patch_volume_attachment_finalizers(volume_attachment_name):
     """
     Patches out the finalizers on a VolumeAttachment.
     """
-    body = {"metadata": {"finalizers": []}}  # Removing finalizers
+    body = {"metadata": {"finalizers": None}}  # Removing finalizers
     try:
         api_response = client.StorageV1Api().patch_volume_attachment(volume_attachment_name, body)
         logging.info(f"delete_volumeattachment_in_detacherror: VolumeAttachment {volume_attachment_name} patched: {api_response}")
