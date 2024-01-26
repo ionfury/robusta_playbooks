@@ -3,7 +3,7 @@ import logging
 from robusta.api import ActionException, ErrorCodes, PrometheusKubernetesAlert, action
 
 from kubernetes import client
-from kubernetes.client import V1VolumeAttachmentStatus
+from kubernetes.client import V1VolumeAttachment, V1VolumeAttachmentStatus
 
 def delete_volume_attachment(volume_attachment_name):
     """
@@ -39,7 +39,9 @@ def delete_volumeattachment_in_detacherror(event: PrometheusKubernetesAlert):
         raise ActionException(ErrorCodes.RESOURCE_NOT_FOUND, f"delete_volumeattachment_in_detacherror: VolumeAttachment name not found in alert labels")
 
     try:
-        volume_attachment_status: V1VolumeAttachmentStatus = client.StorageV1Api().read_volume_attachment_status(volume_attachment_name)
+        volume_attachment: V1VolumeAttachment = client.StorageV1Api().read_volume_attachment_status(volume_attachment_name)
+
+        volume_attachment_status: V1VolumeAttachmentStatus = volume_attachment.status
 
         if volume_attachment_status.detach_error is not None:
             logging.info(f"delete_volumeattachment_in_detacherror: detachError found in {volume_attachment_name}.  Deleting...")
