@@ -1,0 +1,14 @@
+[tool.poetry]
+name = "robusta_playbooks"
+version = "0.0.1"
+description = "Robusta playbooks for ionfury's homelab"
+authors = ["Tom Nowak <ionfury@gmail.com>"]
+
+[tool.poetry.dependencies]
+
+[tool.poetry.dev-dependencies]
+robusta-cli = "^0.10.27"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
