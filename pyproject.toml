@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "robusta_playbooks"
+name = "homelab_playbooks"
 version = "0.0.1"
 description = "Robusta playbooks for ionfury's homelab"
 authors = ["Tom Nowak <ionfury@gmail.com>"]
