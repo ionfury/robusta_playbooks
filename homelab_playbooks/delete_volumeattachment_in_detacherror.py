@@ -15,11 +15,23 @@ def delete_volume_attachment(volume_attachment_name):
     except Exception as e:
         ActionException(ErrorCodes.ACTION_UNEXPECTED_ERROR, f"Exception when calling StorageV1Api->delete_volume_attachment: {e}")
 
+def patch_volume_attachment_finalizers(volume_attachment_name):
+    """
+    Patches out the finalizers on a VolumeAttachment.
+    """
+    body = {"metadata": {"finalizers": []}}  # Removing finalizers
+    try:
+        api_response = client.StorageV1Api().patch_volume_attachment(volume_attachment_name, body)
+        logging.info(f"VolumeAttachment {volume_attachment_name} patched: {api_response}")
+    except Exception as e:
+        ActionException(ErrorCodes.ACTION_UNEXPECTED_ERROR, f"Exception when calling StorageV1Api->patch_volume_attachment: {e}")
+
 @action
 def delete_volumeattachment_in_detacherror(event: PrometheusKubernetesAlert):
     """
     Deletes a volumeattachment only when it is in a detach error state.
     """
+    logging.info(f"Entered delete_volumeattachment_in_detacherror!")
 
     volume_attachment_name = event.alert.labels.get('volumeattachment')
 
@@ -31,7 +43,7 @@ def delete_volumeattachment_in_detacherror(event: PrometheusKubernetesAlert):
 
         if volume_attachment_status.detach_error is not None:
             logging.info(f"detachError found in {volume_attachment_name}.  Deleting...")
-            delete_volume_attachment(volume_attachment_name)
+            patch_volume_attachment_finalizers(volume_attachment_name)
         else:
             logging.info(f"No detachError found in {volume_attachment_name}.")
 
