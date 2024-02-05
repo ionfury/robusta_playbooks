@@ -13,11 +13,11 @@ def delete_node_volumeattachments(event: NodeEvent):
     body = {"metadata": {"finalizers": None}}  # Removing finalizers
     node = event.get_node()
 
-    volume_attachments = client.StorageV1Api().list_volume_attachment()
+    volume_attachments = client.StorageV1Api().list_kubecvolume_attachment()
     for volume_attachment in volume_attachments.items:
-        if volume_attachment.spec.node_name == node.name:
+        if volume_attachment.spec.node_name == node.metadata.name:
             try:
-                logging.info(f"delete_node_volumeattachments: deleting & removing finalizers from volume_attachment {volume_attachment.metadata.name} from node {node.name}")
+                logging.info(f"delete_node_volumeattachments: deleting & removing finalizers from volume_attachment {volume_attachment.metadata.name} from node {node.metadata.name}")
                 client.StorageV1Api().delete_volume_attachment(volume_attachment.metadata.name)
                 client.StorageV1Api().patch_volume_attachment(volume_attachment.metadata.name, body)
             except Exception as e:
