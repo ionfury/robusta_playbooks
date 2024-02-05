@@ -13,7 +13,7 @@ def delete_node_volumeattachments(event: NodeEvent):
     body = {"metadata": {"finalizers": None}}  # Removing finalizers
     node = event.get_node()
 
-    volume_attachments = client.StorageV1Api().list_kubecvolume_attachment()
+    volume_attachments = client.StorageV1Api().list_volume_attachment()
     for volume_attachment in volume_attachments.items:
         if volume_attachment.spec.node_name == node.metadata.name:
             try:
