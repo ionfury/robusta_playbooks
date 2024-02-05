@@ -13,9 +13,6 @@ def delete_node_volumeattachments(event: NodeEvent):
     body = {"metadata": {"finalizers": None}}  # Removing finalizers
     node = event.get_node()
 
-    if node:
-        raise ActionException(ErrorCodes.ACTION_UNEXPECTED_ERROR, f"delete_node_volume_attachments: node still exists.")
-
     volume_attachments = client.StorageV1Api().list_volume_attachment()
     for volume_attachment in volume_attachments.items:
         if volume_attachment.spec.node_name == node.name:
